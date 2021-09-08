@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         btncalc.setOnClickListener(view -> {
             Integer total = calculateString(Objects.requireNonNull(userInput.getEditText()).getText().toString());
-            Toast.makeText(this, total.toString(), Toast.LENGTH_SHORT).show();
-
+            Toast topToast = Toast.makeText(this, "Total: "+ total.toString(), Toast.LENGTH_SHORT);
+            topToast.setGravity(Gravity.TOP, 0, 0);
         });
 
     }
@@ -42,13 +43,17 @@ public class MainActivity extends AppCompatActivity {
         if(input.isEmpty()) {
             return 0;
         }
-        String delimiterRegex = "[,.-]+";
+        String delimiterRegex = "[,.-/\n]+";
         String[] list = input.split(delimiterRegex);
 
         int total = 0;
         for(String item: list) {
             int num = Integer.parseInt(item);
             total += num;
+        }
+
+        if(total> 1000) {
+            total -= 1000;
         }
 
         return total;
