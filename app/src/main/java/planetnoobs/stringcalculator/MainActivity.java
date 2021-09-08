@@ -32,7 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
         btncalc.setOnClickListener(view -> {
             Integer total = calculateString(Objects.requireNonNull(userInput.getEditText()).getText().toString());
-            Toast topToast = Toast.makeText(this, "Total: "+ total.toString(), Toast.LENGTH_SHORT);
+            Toast topToast;
+            if(total > 0) {
+                topToast = Toast.makeText(this, "Total: " + total.toString(), Toast.LENGTH_SHORT);
+            }else  {
+                topToast = Toast.makeText(this, "Negative numbers are not allowed", Toast.LENGTH_SHORT);
+            }
             topToast.setGravity(Gravity.TOP, 0, 0);
         });
 
@@ -43,12 +48,15 @@ public class MainActivity extends AppCompatActivity {
         if(input.isEmpty()) {
             return 0;
         }
-        String delimiterRegex = "[,.-/\n]+";
+        String delimiterRegex = "[%%@#!~,./\n]+";
         String[] list = input.split(delimiterRegex);
 
         int total = 0;
         for(String item: list) {
             int num = Integer.parseInt(item);
+            if(num < 0) {
+                return -1;
+            }
             total += num;
         }
 
