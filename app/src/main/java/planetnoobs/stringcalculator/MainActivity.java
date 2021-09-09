@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -20,7 +21,9 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity {
 
     TextInputLayout userInput;
+    TextView totalCount;
     MaterialButton btncalc;
+    StringCalculator stringCalculator = new StringCalculator();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -29,41 +32,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         userInput = findViewById(R.id.userInput);
         btncalc = findViewById(R.id.btncalc);
+        totalCount = findViewById(R.id.totalCount);
 
         btncalc.setOnClickListener(view -> {
-            Integer total = calculateString(Objects.requireNonNull(userInput.getEditText()).getText().toString());
-            Toast topToast;
+            int total = stringCalculator.calculateString(Objects.requireNonNull(userInput.getEditText()).getText().toString());
             if(total > 0) {
-                topToast = Toast.makeText(this, "Total: " + total.toString(), Toast.LENGTH_SHORT);
-            }else  {
-                topToast = Toast.makeText(this, "Negative numbers are not allowed", Toast.LENGTH_SHORT);
+                totalCount.setText(String.valueOf(total));
+            }else {
+                Toast.makeText(this, "Negative numbers are not allowed", Toast.LENGTH_SHORT).show();
             }
-            topToast.setGravity(Gravity.TOP, 0, 0);
         });
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private int calculateString(String input) {
-        if(input.isEmpty()) {
-            return 0;
-        }
-        String delimiterRegex = "[%%@#!~,./\n]+";
-        String[] list = input.split(delimiterRegex);
 
-        int total = 0;
-        for(String item: list) {
-            int num = Integer.parseInt(item);
-            if(num < 0) {
-                return -1;
-            }
-            total += num;
-        }
-
-        if(total> 1000) {
-            total -= 1000;
-        }
-
-        return total;
-    }
 }
